@@ -1,0 +1,12 @@
+{
+  "name": "Session Spy",
+  "description": "Shows who else is logged in to your computer, locally or remotely (SSH, remote desktop), and lets you end their sessions.\n\nSupports showing as obvious pill icons on the top bar or integrated in the system menu.\n\nAny suggestion is appreciated on GitHub!",
+  "uuid": "sessionspy@dev.swz",
+  "gettext-domain": "sessionspy@dev.swz",
+  "settings-schema": "org.gnome.shell.extensions.sessionspy",
+  "url": "https://github.com/swinzy/session-spy",
+  "version": 1,
+  "shell-version": [
+    "46", "47", "48", "49", "50", "51"
+  ]
+}

@@ -1,0 +1,79 @@
+/* Top bar buttons. The remote one is a blue pill styled like GNOME's screen
+ * sharing (orange) and screen recording (red) indicators. The overview, lock
+ * and login screen variants repeat it because the theme restyles panel
+ * buttons there with equally specific selectors. */
+#panel .panel-button.session-spy-local-indicator StBoxLayout,
+#panel .panel-button.session-spy-remote-indicator StBoxLayout {
+    spacing: 0.409em;
+}
+
+#panel .panel-button.session-spy-local-indicator StIcon,
+#panel .panel-button.session-spy-remote-indicator StIcon {
+    icon-size: 1.091em;
+}
+
+#panel .panel-button.session-spy-remote-indicator,
+#panel:overview .panel-button.session-spy-remote-indicator,
+#panel.unlock-screen .panel-button.session-spy-remote-indicator,
+#panel.login-screen .panel-button.session-spy-remote-indicator {
+    font-weight: bold;
+    color: #fafafb;
+    box-shadow: inset 0 0 0 100px #3584e4;
+}
+
+#panel .panel-button.session-spy-remote-indicator:focus,
+#panel .panel-button.session-spy-remote-indicator:hover,
+#panel:overview .panel-button.session-spy-remote-indicator:focus,
+#panel:overview .panel-button.session-spy-remote-indicator:hover {
+    box-shadow: inset 0 0 0 100px #4990e7;
+}
+
+#panel .panel-button.session-spy-remote-indicator:active,
+#panel .panel-button.session-spy-remote-indicator:checked,
+#panel:overview .panel-button.session-spy-remote-indicator:active,
+#panel:overview .panel-button.session-spy-remote-indicator:checked {
+    box-shadow: inset 0 0 0 100px #5799e9;
+}
+
+#panel .panel-button.session-spy-remote-indicator:active:hover,
+#panel .panel-button.session-spy-remote-indicator:checked:hover,
+#panel:overview .panel-button.session-spy-remote-indicator:active:hover,
+#panel:overview .panel-button.session-spy-remote-indicator:checked:hover {
+    box-shadow: inset 0 0 0 100px #619fea;
+}
+
+/* Session list */
+.session-spy-title {
+    font-weight: bold;
+}
+
+.session-spy-details {
+    font-size: 0.85em;
+    opacity: 0.7;
+}
+
+/* Counts next to the quick settings status icons */
+.session-spy-count {
+    padding-right: 4px;
+}
+
+/* End session buttons in the session list, like the close buttons of GNOME's
+ * background apps list */
+.session-spy-end-button {
+    padding: 6px;
+    background-color: rgba(255, 255, 255, 0.13);
+}
+
+.session-spy-end-button:hover {
+    background-color: rgba(255, 255, 255, 0.22);
+}
+
+.session-spy-end-button:active {
+    background-color: rgba(255, 255, 255, 0.31);
+}
+
+/* Icons of the session list: smaller than the 32px app icons of GNOME's
+ * background apps list, which look too heavy as symbolic icons */
+.session-spy-icon {
+    icon-size: 24px;
+}

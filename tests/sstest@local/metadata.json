@@ -1,0 +1,6 @@
+{
+  "name": "Session Spy test driver",
+  "description": "Drives sessionspy@dev.swz in tests/run.sh",
+  "uuid": "sstest@local",
+  "shell-version": ["46", "47", "48", "49", "50", "51"]
+}

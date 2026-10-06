@@ -1,0 +1,167 @@
+# Spanish (Spain) translation for Session Spy.
+# This file is distributed under the same license as the Session Spy package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Session Spy\n"
+"Report-Msgid-Bugs-To: https://github.com/swinzy/session-spy/issues\n"
+"POT-Creation-Date: 2026-10-06 16:22+1100\n"
+"PO-Revision-Date: 2026-10-06 16:45+1100\n"
+"Last-Translator: Stephen Zhang <19246983+swinzy@users.noreply.github.com>\n"
+"Language-Team: Spanish (Spain)\n"
+"Language: es_ES\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: sessionspy@dev.swz/endSession.js:124
+msgid "End Session?"
+msgstr "¿Finalizar la sesión?"
+
+#: sessionspy@dev.swz/endSession.js:129
+msgid "This will also stop all processes associated with this session."
+msgstr "Esto también detendrá todos los procesos asociados a esta sesión."
+
+#: sessionspy@dev.swz/endSession.js:140
+#, javascript-format
+msgid "%d more process"
+msgid_plural "%d more processes"
+msgstr[0] "%d proceso más"
+msgstr[1] "%d procesos más"
+
+#: sessionspy@dev.swz/endSession.js:147
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: sessionspy@dev.swz/endSession.js:155 sessionspy@dev.swz/extension.js:361
+msgid "End Session"
+msgstr "Finalizar sesión"
+
+#: sessionspy@dev.swz/extension.js:99 sessionspy@dev.swz/extension.js:430
+msgid "unknown host"
+msgstr "equipo desconocido"
+
+#: sessionspy@dev.swz/extension.js:299
+#, javascript-format
+msgid "Cannot end session %s"
+msgstr "No se pudo finalizar la sesión %s"
+
+#: sessionspy@dev.swz/extension.js:344
+#, javascript-format
+msgid "%s (this session)"
+msgstr "%s (esta sesión)"
+
+#: sessionspy@dev.swz/extension.js:416
+#, javascript-format
+msgid "%d process"
+msgid_plural "%d processes"
+msgstr[0] "%d proceso"
+msgstr[1] "%d procesos"
+
+#: sessionspy@dev.swz/extension.js:429
+#, javascript-format
+msgid "From: %s"
+msgstr "Desde: %s"
+
+#: sessionspy@dev.swz/extension.js:432
+#, javascript-format
+msgid "Seat: %s"
+msgstr "Puesto de trabajo: %s"
+
+#: sessionspy@dev.swz/extension.js:435
+#, javascript-format
+msgid "Terminal: %s"
+msgstr "Terminal: %s"
+
+#: sessionspy@dev.swz/extension.js:437
+#, javascript-format
+msgid "Display: %s"
+msgstr "Display: %s"
+
+#: sessionspy@dev.swz/extension.js:439
+#, javascript-format
+msgid "Login service: %s"
+msgstr "Servicio de inicio de sesión: %s"
+
+#: sessionspy@dev.swz/extension.js:441
+#, javascript-format
+msgid "Type: %s"
+msgstr "Tipo: %s"
+
+#: sessionspy@dev.swz/extension.js:443
+#, javascript-format
+msgid "Started: %s"
+msgstr "Iniciada: %s"
+
+#: sessionspy@dev.swz/extension.js:445
+msgid "Disconnected, processes left running"
+msgstr "Desconectada, con procesos aún en ejecución"
+
+#: sessionspy@dev.swz/extension.js:447
+#, javascript-format
+msgid "Idle since %s"
+msgstr "Inactiva desde %s"
+
+#: sessionspy@dev.swz/extension.js:463
+#, javascript-format
+msgid "Cannot read sessions: %s"
+msgstr "No se pudieron leer las sesiones: %s"
+
+#: sessionspy@dev.swz/extension.js:484
+msgid "Session Spy"
+msgstr "Session Spy"
+
+#: sessionspy@dev.swz/extension.js:566 sessionspy@dev.swz/extension.js:580
+msgid "Login Sessions"
+msgstr "Sesiones iniciadas"
+
+#: sessionspy@dev.swz/extension.js:583
+#, javascript-format
+msgid "%d Login Session"
+msgid_plural "%d Login Sessions"
+msgstr[0] "%d sesión iniciada"
+msgstr[1] "%d sesiones iniciadas"
+
+#: sessionspy@dev.swz/extension.js:585
+#, javascript-format
+msgid "%d Disconnected"
+msgid_plural "%d Disconnected"
+msgstr[0] "%d desconectada"
+msgstr[1] "%d desconectadas"
+
+#: sessionspy@dev.swz/prefs.js:13
+msgid "System Menu"
+msgstr "Menú del sistema"
+
+#: sessionspy@dev.swz/prefs.js:14
+msgid "Top Bar"
+msgstr "Barra superior"
+
+#: sessionspy@dev.swz/prefs.js:15
+msgid "Both"
+msgstr "Ambos"
+
+#: sessionspy@dev.swz/prefs.js:56
+msgid "Preferences"
+msgstr "Preferencias"
+
+#: sessionspy@dev.swz/prefs.js:64
+msgid "Display Location"
+msgstr "Ubicación"
+
+#: sessionspy@dev.swz/prefs.js:69
+msgid "Show Session Counts"
+msgstr "Mostrar el número de sesiones"
+
+#: sessionspy@dev.swz/prefs.js:70
+msgid ""
+"Show the number of sessions next to the icon if multiple sessions (except "
+"for this local session) are running."
+msgstr ""
+"Muestra el número de sesiones junto al icono si hay varias sesiones en "
+"ejecución (sin contar esta sesión local)."
+
+#: sessionspy@dev.swz/prefs.js:90
+msgid "Report an Issue"
+msgstr "Informar de un problema"
