@@ -1,22 +1,24 @@
+<p>
+<a href="https://extensions.gnome.org/extension/11153/session-spy/"><img align="right" height="90" alt="Get it on GNOME Extensions" src="https://raw.githubusercontent.com/andyholmes/gnome-shell-extensions-badge/master/get-it-on-ego.svg?sanitize=true"></a>
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="./res/banner-dark.png" />
-  <img src="./res/banner-light.png" width="400" alt="Session Spy" />
+  <img src="./res/banner-light.png" height="90" alt="Session Spy" />
 </picture>
+</p>
 
----
+<h2 align="center">
+A GNOME extension that shows who else is logged in to your computer, locally or remotely (SSH, remote desktop).
+</h2>
 
-<p>
+<p align="center">
   <img src="./screenshots/top-bar-menu.png" height="300" alt="Top bar buttons for remote and local sessions, with the session list open and one session expanded" />
   <img src="./screenshots/system-menu-list.png" height="420" alt="The system menu with the Login Sessions row open, listing the sessions with one expanded" />
 </p>
 
-A GNOME extension that shows who else is logged in to your computer, locally or remotely (SSH, remote desktop).<br>
 
 | Current Support |
 |-----------------|
 | 46 – 51         |
-
-[<img alt="Get it on GNOME Extensions" height="90" src="https://raw.githubusercontent.com/andyholmes/gnome-shell-extensions-badge/master/get-it-on-ego.svg?sanitize=true">](https://extensions.gnome.org/extension/11153/session-spy/)
 
 ## Usage:
 1. Install and enable the extension
