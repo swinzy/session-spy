@@ -1,7 +1,9 @@
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="./res/banner-dark.png" />
-  <img src="./res/banner-light.png" width="534" alt="Session Spy" />
+  <img src="./res/banner-light.png" width="400" alt="Session Spy" />
 </picture>
+
+---
 
 <p>
   <img src="./screenshots/top-bar-menu.png" height="300" alt="Top bar buttons for remote and local sessions, with the session list open and one session expanded" />
