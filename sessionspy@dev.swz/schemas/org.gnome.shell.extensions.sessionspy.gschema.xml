@@ -5,16 +5,20 @@
       <choices>
         <choice value="system-menu"/>
         <choice value="top-bar"/>
-        <choice value="both"/>
       </choices>
       <default>"system-menu"</default>
       <summary>Where sessions are shown</summary>
-      <description>"system-menu": icons among the system menu's status icons and a row in its quick settings. "top-bar": separate top bar buttons, the remote one a blue pill. "both": the top bar buttons and the row in the system menu.</description>
+      <description>"system-menu": icons among the system menu's status icons and a row in its quick settings. "top-bar": separate top bar buttons ("pills"), the remote one blue, each opening the session list.</description>
     </key>
     <key name="show-counts" type="b">
       <default>false</default>
       <summary>Show high session counts next to the system menu icons</summary>
       <description>Normally there is one local session (this one) and no remote ones, and the icon alone already shows one more than that, so counts are shown from three local or two remote sessions on. Only used with the "system-menu" location; the top bar buttons always show counts.</description>
+    </key>
+    <key name="show-session-list" type="b">
+      <default>true</default>
+      <summary>Show the session list in quick settings with the top bar buttons</summary>
+      <description>With the "top-bar" location, also show the Login Sessions row in the system menu's quick settings. The "system-menu" location always shows it.</description>
     </key>
   </schema>
 </schemalist>

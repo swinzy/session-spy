@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Session Spy\n"
 "Report-Msgid-Bugs-To: https://github.com/swinzy/session-spy/issues\n"
-"POT-Creation-Date: 2026-10-06 16:22+1100\n"
+"POT-Creation-Date: 2026-10-07 11:40+1100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -115,18 +115,18 @@ msgstr ""
 msgid "Session Spy"
 msgstr ""
 
-#: sessionspy@dev.swz/extension.js:566 sessionspy@dev.swz/extension.js:580
+#: sessionspy@dev.swz/extension.js:566 sessionspy@dev.swz/extension.js:595
 msgid "Login Sessions"
 msgstr ""
 
-#: sessionspy@dev.swz/extension.js:583
+#: sessionspy@dev.swz/extension.js:598
 #, javascript-format
 msgid "%d Login Session"
 msgid_plural "%d Login Sessions"
 msgstr[0] ""
 msgstr[1] ""
 
-#: sessionspy@dev.swz/extension.js:585
+#: sessionspy@dev.swz/extension.js:600
 #, javascript-format
 msgid "%d Disconnected"
 msgid_plural "%d Disconnected"
@@ -134,22 +134,18 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: sessionspy@dev.swz/prefs.js:13
-msgid "System Menu"
+msgid "Top Bar Pills"
 msgstr ""
 
 #: sessionspy@dev.swz/prefs.js:14
-msgid "Top Bar"
+msgid "System Menu Icons"
 msgstr ""
 
-#: sessionspy@dev.swz/prefs.js:15
-msgid "Both"
-msgstr ""
-
-#: sessionspy@dev.swz/prefs.js:56
+#: sessionspy@dev.swz/prefs.js:55
 msgid "Preferences"
 msgstr ""
 
-#: sessionspy@dev.swz/prefs.js:64
+#: sessionspy@dev.swz/prefs.js:63
 msgid "Display Location"
 msgstr ""
 
@@ -163,6 +159,10 @@ msgid ""
 "for this local session) are running."
 msgstr ""
 
-#: sessionspy@dev.swz/prefs.js:90
+#: sessionspy@dev.swz/prefs.js:76
+msgid "Show Session List in Quick Settings"
+msgstr ""
+
+#: sessionspy@dev.swz/prefs.js:95
 msgid "Report an Issue"
 msgstr ""

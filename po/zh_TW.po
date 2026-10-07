@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Session Spy\n"
 "Report-Msgid-Bugs-To: https://github.com/swinzy/session-spy/issues\n"
-"POT-Creation-Date: 2026-10-06 16:22+1100\n"
+"POT-Creation-Date: 2026-10-07 11:40+1100\n"
 "PO-Revision-Date: 2026-10-06 16:30+1100\n"
 "Last-Translator: Stephen Zhang <19246983+swinzy@users.noreply.github.com>\n"
 "Language-Team: Chinese (Taiwan)\n"
@@ -110,39 +110,35 @@ msgstr "無法讀取作業階段：%s"
 msgid "Session Spy"
 msgstr "Session Spy"
 
-#: sessionspy@dev.swz/extension.js:566 sessionspy@dev.swz/extension.js:580
+#: sessionspy@dev.swz/extension.js:566 sessionspy@dev.swz/extension.js:595
 msgid "Login Sessions"
 msgstr "登入作業階段"
 
-#: sessionspy@dev.swz/extension.js:583
+#: sessionspy@dev.swz/extension.js:598
 #, javascript-format
 msgid "%d Login Session"
 msgid_plural "%d Login Sessions"
 msgstr[0] "%d 個登入作業階段"
 
-#: sessionspy@dev.swz/extension.js:585
+#: sessionspy@dev.swz/extension.js:600
 #, javascript-format
 msgid "%d Disconnected"
 msgid_plural "%d Disconnected"
 msgstr[0] "%d 個已中斷連接"
 
 #: sessionspy@dev.swz/prefs.js:13
-msgid "System Menu"
-msgstr "系統選單"
+msgid "Top Bar Pills"
+msgstr "頂端列膠囊"
 
 #: sessionspy@dev.swz/prefs.js:14
-msgid "Top Bar"
-msgstr "頂端列"
+msgid "System Menu Icons"
+msgstr "系統選單圖示"
 
-#: sessionspy@dev.swz/prefs.js:15
-msgid "Both"
-msgstr "兩者"
-
-#: sessionspy@dev.swz/prefs.js:56
+#: sessionspy@dev.swz/prefs.js:55
 msgid "Preferences"
 msgstr "偏好設定"
 
-#: sessionspy@dev.swz/prefs.js:64
+#: sessionspy@dev.swz/prefs.js:63
 msgid "Display Location"
 msgstr "顯示位置"
 
@@ -156,6 +152,10 @@ msgid ""
 "for this local session) are running."
 msgstr "除此作業階段外有多個作業階段在執行時，在圖示旁顯示作業階段數量。"
 
-#: sessionspy@dev.swz/prefs.js:90
+#: sessionspy@dev.swz/prefs.js:76
+msgid "Show Session List in Quick Settings"
+msgstr "在快速設定中顯示作業階段清單"
+
+#: sessionspy@dev.swz/prefs.js:95
 msgid "Report an Issue"
 msgstr "回報問題"

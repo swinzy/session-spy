@@ -5,7 +5,7 @@
   "gettext-domain": "sessionspy@dev.swz",
   "settings-schema": "org.gnome.shell.extensions.sessionspy",
   "url": "https://github.com/swinzy/session-spy",
-  "version": 1,
+  "version": 2,
   "shell-version": [
     "46", "47", "48", "49", "50", "51"
   ]

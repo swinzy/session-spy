@@ -10,9 +10,8 @@ import Gtk from "gi://Gtk?version=4.0";
 import { ExtensionPreferences, gettext as _ } from "resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js";
 
 const LOCATIONS = [
-    ["system-menu", () => _("System Menu")],
-    ["top-bar", () => _("Top Bar")],
-    ["both", () => _("Both")],
+    ["top-bar", () => _("Top Bar Pills")],
+    ["system-menu", () => _("System Menu Icons")],
 ];
 
 export default class SessionSpyPreferences extends ExtensionPreferences {
@@ -65,12 +64,18 @@ export default class SessionSpyPreferences extends ExtensionPreferences {
         });
         displayGroup.add(locationRow);
 
+        // Only the settings that apply to the chosen location show
         const showCountsRow = new Adw.SwitchRow({
             title: _("Show Session Counts"),
             subtitle: _("Show the number of sessions next to the icon if multiple " +
                 "sessions (except for this local session) are running."),
         });
         displayGroup.add(showCountsRow);
+
+        const showSessionListRow = new Adw.SwitchRow({
+            title: _("Show Session List in Quick Settings"),
+        });
+        displayGroup.add(showSessionListRow);
 
         const linkGroup = new Adw.PreferencesGroup();
         page.add(linkGroup);
@@ -95,11 +100,14 @@ export default class SessionSpyPreferences extends ExtensionPreferences {
         locationRow.add_suffix(this._makeLocationChooser(window._settings));
         window._settings.bind("show-counts", showCountsRow,
             "active", Gio.SettingsBindFlags.DEFAULT);
-        // The top bar buttons always show counts
-        const syncShowCounts = () => {
-            showCountsRow.sensitive = window._settings.get_string("display-location") === "system-menu";
+        window._settings.bind("show-session-list", showSessionListRow,
+            "active", Gio.SettingsBindFlags.DEFAULT);
+        const syncRows = () => {
+            const topBar = window._settings.get_string("display-location") === "top-bar";
+            showCountsRow.visible = !topBar;
+            showSessionListRow.visible = topBar;
         };
-        window._settings.connect("changed::display-location", syncShowCounts);
-        syncShowCounts();
+        window._settings.connect("changed::display-location", syncRows);
+        syncRows();
     }
 }

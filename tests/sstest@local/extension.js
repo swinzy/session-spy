@@ -77,14 +77,11 @@ function checkIndicators(local, remote, localClosing, remoteClosing) {
 
 // Checks which parts exist for the current location
 function checkLocation() {
-    const value = location();
+    const list = settings().get_boolean("show-session-list");
+    const value = location() === "top-bar" ? `top-bar, session list ${list ? "on" : "off"}` : location();
     const buttons = Boolean(topBarButton("local")) + Boolean(topBarButton("remote"));
     const icons = Object.keys(systemMenuView()?.indicator._parts ?? {}).length;
-    const want = {
-        "system-menu": [0, 2, 1],
-        "top-bar": [2, 0, 0],
-        "both": [2, 0, 1],
-    }[value];
+    const want = location() === "top-bar" ? [2, 0, list ? 1 : 0] : [0, 2, 1];
     const got = [buttons, icons, sessionRows()];
     log(`${value}: ${got[0]} top bar buttons, ${got[1]} status icons, ${got[2]} session rows`);
     if (got.join() !== want.join())
@@ -177,6 +174,12 @@ async function showcase() {
             m.setSessions(sessions);
             await sleep(300);
             checkIndicators(...counts);
+            // The session row only shows when someone besides this session is logged in
+            const row = systemMenuView()?.indicator._toggle;
+            const [local, remote, localClosing, remoteClosing] = counts;
+            const wantRow = local > 1 || remote > 0 || localClosing > 0 || remoteClosing > 0;
+            if (row && row.visible !== wantRow)
+                throw new Error(`${name}: session row visible=${row.visible}, expected ${wantRow}`);
             await screenshot(`${prefix}-${name}`, 64);
         }
     }
@@ -336,7 +339,8 @@ async function run() {
     setMenuOpen(Main.panel.statusArea.quickSettings.menu, false);
 
     // The other locations, then back
-    for (const value of ["top-bar", "both", "system-menu"]) {
+    for (const [value, list] of [["top-bar", true], ["top-bar", false], ["system-menu", true]]) {
+        settings().set_boolean("show-session-list", list);
         await setLocation(value);
         checkIndicators(...expected);
         checkLocation();
@@ -394,6 +398,13 @@ async function checkPrefs() {
     if (GLib.getenv("SS_SCREENSHOT_DIR")) {
         const { x, y, width, height } = window.get_frame_rect();
         await screenshot("prefs", 0, { x, y, w: width, h: height });
+        // The preferences window follows the setting and shows only the
+        // switches for the chosen location
+        settings().set_string("display-location", "top-bar");
+        await sleep(1000);
+        await screenshot("prefs-top-bar", 0, { x, y, w: width, h: height });
+        settings().set_string("display-location", "system-menu");
+        await sleep(500);
     }
     window.delete(global.get_current_time());
     await sleep(500);

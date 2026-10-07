@@ -32,12 +32,11 @@ A session that was disconnected but still has processes running (e.g. tmux after
 ## Settings
 Open the extension's preferences in the Extensions app, or with `gnome-extensions prefs sessionspy@dev.swz`.
 
-**Display Location**: where the sessions show.
-- **System Menu** (default): icons among the system menu's status icons, and the "Login Sessions" row in its quick settings
-- **Top Bar**: separate top bar buttons, always with their counts; the remote one is a blue pill like GNOME's screen sharing indicator
-- **Both**: the top bar buttons, and the "Login Sessions" row in the system menu
-
-**Show Session Counts** (System Menu only): show the number of sessions next to an icon. The icon alone already means 2 local or 1 remote session, so counts show from 3 local or 2 remote sessions on.
+**Display Location**: where the sessions show. Only the settings for the chosen location are listed below it.
+- **Top Bar Pills**: separate top bar buttons, always with their counts; the remote one is a blue pill like GNOME's screen sharing indicator
+  - **Show Session List in Quick Settings** (default on): also show the "Login Sessions" row in the system menu
+- **System Menu Icons** (default): icons among the system menu's status icons, and the "Login Sessions" row in its quick settings
+  - **Show Session Counts** (default off): show the number of sessions next to an icon. The icon alone already means 2 local or 1 remote session, so counts show from 3 local or 2 remote sessions on
 
 <p>
   <img src="./screenshots/system-menu.png" alt="System Menu icons in seven situations, with Show Session Counts off and on" />

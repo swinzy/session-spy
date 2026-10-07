@@ -571,11 +571,26 @@ class SessionsToggle extends QuickToggle {
         this.menu.connectObject("open-state-changed", (menu, open) => {
             if (open)
                 this._monitor.refresh();
+            this._syncVisible();
         }, this);
     }
 
+    /**
+     * Like the top bar icons, the row only shows when someone besides this
+     * session is logged in (or reading the sessions failed). As with GNOME's
+     * background apps row, it is not hidden while its list is open, which
+     * would misplace the menu.
+     */
+    _syncVisible() {
+        this.visible = this.menu.isOpen || this._worthShowing;
+    }
+
     sync() {
-        const { counts, groups } = this._monitor;
+        const { counts, groups, error } = this._monitor;
+        this._worthShowing = counts
+            ? indicatorState(counts, "local").visible || indicatorState(counts, "remote").visible
+            : Boolean(error);
+        this._syncVisible();
         if (!counts) {
             this.title = _("Login Sessions");
         } else {
@@ -673,23 +688,28 @@ export default class SessionSpyExtension extends Extension {
         this._settings = this.getSettings();
         this._views = [];
         this._monitor = new SessionMonitor(() => this._views.forEach(v => v.sync()));
-        this._settings.connectObject("changed::display-location", () => this._createViews(), this);
+        this._settings.connectObject(
+            "changed::display-location", () => this._createViews(),
+            "changed::show-session-list", () => this._createViews(),
+            this);
         this._createViews();
     }
 
     /**
      * "system-menu": status icons and the session row in the system menu.
-     * "top-bar": separate top bar buttons. "both": the top bar buttons, and
-     * the session row without the then duplicate status icons.
+     * "top-bar": separate top bar buttons, and the session row (without the
+     * then duplicate status icons) unless "show-session-list" is off.
      */
     _createViews() {
         this._views.forEach(v => v.destroy());
-        const location = this._settings.get_string("display-location");
         this._views = [];
-        if (location !== "system-menu")
+        if (this._settings.get_string("display-location") === "top-bar") {
             this._views.push(new PanelButtonsView(this.uuid, this._monitor));
-        if (location !== "top-bar")
-            this._views.push(new SystemMenuView(this._monitor, this._settings, location === "system-menu"));
+            if (this._settings.get_boolean("show-session-list"))
+                this._views.push(new SystemMenuView(this._monitor, this._settings, false));
+        } else {
+            this._views.push(new SystemMenuView(this._monitor, this._settings, true));
+        }
         this._views.forEach(v => v.sync());
     }
 

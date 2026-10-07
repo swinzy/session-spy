@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Session Spy\n"
 "Report-Msgid-Bugs-To: https://github.com/swinzy/session-spy/issues\n"
-"POT-Creation-Date: 2026-10-06 16:22+1100\n"
+"POT-Creation-Date: 2026-10-07 11:40+1100\n"
 "PO-Revision-Date: 2026-10-06 12:03+1100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -113,39 +113,35 @@ msgstr "无法读取会话：%s"
 msgid "Session Spy"
 msgstr "Session Spy"
 
-#: sessionspy@dev.swz/extension.js:566 sessionspy@dev.swz/extension.js:580
+#: sessionspy@dev.swz/extension.js:566 sessionspy@dev.swz/extension.js:595
 msgid "Login Sessions"
 msgstr "登录会话"
 
-#: sessionspy@dev.swz/extension.js:583
+#: sessionspy@dev.swz/extension.js:598
 #, javascript-format
 msgid "%d Login Session"
 msgid_plural "%d Login Sessions"
 msgstr[0] "%d 个登录会话"
 
-#: sessionspy@dev.swz/extension.js:585
+#: sessionspy@dev.swz/extension.js:600
 #, javascript-format
 msgid "%d Disconnected"
 msgid_plural "%d Disconnected"
 msgstr[0] "%d 个已断开"
 
 #: sessionspy@dev.swz/prefs.js:13
-msgid "System Menu"
-msgstr "系统菜单"
+msgid "Top Bar Pills"
+msgstr "顶栏胶囊"
 
 #: sessionspy@dev.swz/prefs.js:14
-msgid "Top Bar"
-msgstr "顶栏"
+msgid "System Menu Icons"
+msgstr "系统菜单图标"
 
-#: sessionspy@dev.swz/prefs.js:15
-msgid "Both"
-msgstr "两者"
-
-#: sessionspy@dev.swz/prefs.js:56
+#: sessionspy@dev.swz/prefs.js:55
 msgid "Preferences"
 msgstr "首选项"
 
-#: sessionspy@dev.swz/prefs.js:64
+#: sessionspy@dev.swz/prefs.js:63
 msgid "Display Location"
 msgstr "显示位置"
 
@@ -159,6 +155,10 @@ msgid ""
 "for this local session) are running."
 msgstr "除本会话外有多个会话在运行时，在图标旁显示会话数量。"
 
-#: sessionspy@dev.swz/prefs.js:90
+#: sessionspy@dev.swz/prefs.js:76
+msgid "Show Session List in Quick Settings"
+msgstr "在快捷设置中显示会话列表"
+
+#: sessionspy@dev.swz/prefs.js:95
 msgid "Report an Issue"
 msgstr "报告问题"
