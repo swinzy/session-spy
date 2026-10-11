@@ -1,7 +1,4 @@
-/* Top bar buttons. The remote one is a blue pill styled like GNOME's screen
- * sharing (orange) and screen recording (red) indicators. The overview, lock
- * and login screen variants repeat it because the theme restyles panel
- * buttons there with equally specific selectors. */
+/* Like .screen-sharing-indicator; the theme restyles panel buttons in the overview, so repeat for it */
 #panel .panel-button.session-spy-local-indicator StBoxLayout,
 #panel .panel-button.session-spy-remote-indicator StBoxLayout {
     spacing: 0.409em;
@@ -42,7 +39,6 @@
     box-shadow: inset 0 0 0 100px #619fea;
 }
 
-/* Session list */
 .session-spy-title {
     font-weight: bold;
 }
@@ -52,13 +48,11 @@
     opacity: 0.7;
 }
 
-/* Counts next to the quick settings status icons */
 .session-spy-count {
     padding-right: 4px;
 }
 
-/* End session buttons in the session list, like the close buttons of GNOME's
- * background apps list */
+/* As .background-app-item .icon-button */
 .session-spy-end-button {
     padding: 6px;
     background-color: rgba(255, 255, 255, 0.13);
@@ -72,8 +66,7 @@
     background-color: rgba(255, 255, 255, 0.31);
 }
 
-/* Icons of the session list: smaller than the 32px app icons of GNOME's
- * background apps list, which look too heavy as symbolic icons */
+/* 32px like Background Apps is too heavy for symbolic icons */
 .session-spy-icon {
     icon-size: 24px;
 }

@@ -66,5 +66,6 @@ To add or update one:
 3. Run `tools/pack.sh` to build `dist/sessionspy@dev.swz.zip` and install it with `gnome-extensions install --force dist/sessionspy@dev.swz.zip`
 
 ## Development
+- [`docs/technical.md`](docs/technical.md) explains how the extension works, what it relies on in GNOME Shell and systemd, and how it is tested and released
 - `tests/run.sh` runs the extension in a throw-away headless GNOME Shell (it works over SSH), checks it against `loginctl` and opens its preferences. Set `SS_SCREENSHOT_DIR` to also save screenshots with made-up sessions
 - `screenshots/top-bar-menu.png` and `system-menu-list.png` have a transparent desktop: take the screenshots twice, with `SS_BACKGROUND=#ffffff` and `#000000`, and combine each pair with `tools/transparent.py` (needs Pillow)

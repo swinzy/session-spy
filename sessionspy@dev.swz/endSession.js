@@ -12,39 +12,13 @@ import * as Dialog from "resource:///org/gnome/shell/ui/dialog.js";
 import * as ModalDialog from "resource:///org/gnome/shell/ui/modalDialog.js";
 import { gettext as _, ngettext } from "resource:///org/gnome/shell/extensions/extension.js";
 
-// More would only make the dialog slow to open; the list scrolls anyway
+import { callAsync, callSystemBus } from "./async.js";
+
+// More would only slow the dialog down; its list scrolls anyway
 const MAX_LISTED_PROCESSES = 100;
 
 function callSystemd(path, iface, method, params, cancellable) {
-    return new Promise((resolve, reject) => {
-        Gio.DBus.system.call(
-            "org.freedesktop.systemd1", path, iface, method, params, null,
-            Gio.DBusCallFlags.NONE, -1, cancellable,
-            (connection, result) => {
-                try {
-                    resolve(connection.call_finish(result).recursiveUnpack());
-                } catch (e) {
-                    reject(e);
-                }
-            });
-    });
-}
-
-/**
- * Calls an asynchronous GIO method and resolves with what its finish method
- * returns. (Gio._promisify would change GIO's prototypes for all of GNOME
- * Shell, which an extension must not do.)
- */
-function callAsync(object, method, finish, ...args) {
-    return new Promise((resolve, reject) => {
-        object[method](...args, (source, result) => {
-            try {
-                resolve(source[finish](result));
-            } catch (e) {
-                reject(e);
-            }
-        });
-    });
+    return callSystemBus("org.freedesktop.systemd1", path, iface, method, params, cancellable);
 }
 
 async function readText(path, cancellable) {
@@ -53,7 +27,6 @@ async function readText(path, cancellable) {
     return new TextDecoder().decode(bytes);
 }
 
-/** Process IDs in a cgroup and the cgroups below it. */
 async function readCgroupPids(dir, cancellable) {
     const pids = (await readText(`${dir}/cgroup.procs`, cancellable))
         .split("\n").filter(Boolean).map(Number);
@@ -74,7 +47,6 @@ async function readCgroupPids(dir, cancellable) {
     return pids;
 }
 
-/** The name and command line of a process, or null if it has gone. */
 async function describeProcess(pid, cancellable) {
     try {
         const argv = (await readText(`/proc/${pid}/cmdline`, cancellable)).split("\0").filter(Boolean);
@@ -88,11 +60,6 @@ async function describeProcess(pid, cancellable) {
     }
 }
 
-/**
- * Lists the processes of a logind session, from its systemd scope unit.
- * Resolves with { processes, total }, where processes holds at most
- * MAX_LISTED_PROCESSES of the total, by process ID.
- */
 export async function listSessionProcesses(scope, cancellable = null) {
     const [unitPath] = await callSystemd("/org/freedesktop/systemd1", "org.freedesktop.systemd1.Manager",
         "GetUnit", new GLib.Variant("(s)", [scope]), cancellable);
@@ -104,20 +71,10 @@ export async function listSessionProcesses(scope, cancellable = null) {
     return { processes, total: pids.length };
 }
 
-/**
- * Asks before ending a session, styled like GNOME's own log out dialog: the
- * warning about the session's processes is in its amber list title, above the
- * processes themselves.
- */
 export const EndSessionDialog = GObject.registerClass(
 class EndSessionDialog extends ModalDialog.ModalDialog {
-    /**
-     * @param {string} name the session's name, e.g. "swz (#11)"
-     * @param {string} details where the session comes from
-     * @param {?object} processes from listSessionProcesses(), or null if unknown
-     * @param {Function} onConfirm called once the dialog has closed
-     */
     _init(name, details, processes, onConfirm) {
+        // GNOME's log out dialog style shows the list title as an amber warning
         super._init({ styleClass: "end-session-dialog", destroyOnClose: true });
 
         this.contentLayout.add_child(new Dialog.MessageDialogContent({
@@ -128,13 +85,14 @@ class EndSessionDialog extends ModalDialog.ModalDialog {
         const list = new Dialog.ListSection({
             title: _("This will also stop all processes associated with this session."),
         });
-        for (const { pid, name: processName, command } of processes?.processes ?? []) {
+        const listed = processes ? processes.processes : [];
+        for (const { pid, name: processName, command } of listed) {
             list.list.add_child(new Dialog.ListSectionItem({
                 title: processName,
                 description: `${pid} · ${command || processName}`,
             }));
         }
-        const unlisted = processes ? processes.total - processes.processes.length : 0;
+        const unlisted = processes ? processes.total - listed.length : 0;
         if (unlisted > 0) {
             list.list.add_child(new Dialog.ListSectionItem({
                 title: ngettext("%d more process", "%d more processes", unlisted).format(unlisted),

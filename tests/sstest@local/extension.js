@@ -135,7 +135,7 @@ const FAKE_NOW = new Date().setHours(14, 30, 0, 0);
 
 function fakeSession(id, name, minutesAgo, props) {
     return {
-        id: String(id), Name: name, Class: "user", State: "active", Active: false, Remote: false,
+        id: String(id), Name: name, Class: "user", State: "active", Active: false, Remote: false, Seat: ["", "/"],
         Timestamp: (FAKE_NOW - minutesAgo * 60_000) * 1000, ...props,
     };
 }
@@ -318,7 +318,9 @@ async function run() {
     await waitFor("Main.layoutManager startup", () => !Main.layoutManager._startingUp);
 
     await waitFor("system menu view", () => systemMenuView());
-    let counts = await waitFor("counts", () => monitor()?.counts);
+    let counts = await waitFor("counts", () => monitor()?.counts).catch(e => {
+        throw new Error(`${e.message}; monitor error: ${monitor()?.error}\n${monitor()?.error?.stack}`);
+    });
     const actual = [counts.local, counts.remote, counts.localClosing, counts.remoteClosing];
     log(`counts ${actual.join(" ")}, expected ${expected.join(" ")}, own session ${monitor().ownSessionId}`);
     if (actual.join(" ") !== expected.join(" "))

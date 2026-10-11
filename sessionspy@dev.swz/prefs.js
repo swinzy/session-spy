@@ -15,11 +15,7 @@ const LOCATIONS = [
 ];
 
 export default class SessionSpyPreferences extends ExtensionPreferences {
-    /**
-     * A segmented control for "display-location": Adw.ToggleGroup where
-     * libadwaita has it (1.7, GNOME 48), else linked toggle buttons that look
-     * much the same.
-     */
+    // Adw.ToggleGroup is new in libadwaita 1.7; older ones get linked toggle buttons
     _makeLocationChooser(settings) {
         if (Adw.ToggleGroup) {
             const group = new Adw.ToggleGroup({ valign: Gtk.Align.CENTER });
