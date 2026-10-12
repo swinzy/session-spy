@@ -21,7 +21,6 @@ const SYSTEMD_SCOPE_IFACE = "org.freedesktop.systemd1.Scope";
 
 // More would only slow the dialog down; its list scrolls anyway
 const MAX_LISTED_PROCESSES = 100;
-// Directory entries read per call while walking the cgroup tree
 const ENUMERATE_BATCH_SIZE = 50;
 
 function callSystemd(path, iface, method, params, cancellable) {

@@ -155,7 +155,6 @@ export class SessionMonitor {
         if (!groups)
             return null;
         const closing = groups[KIND_CLOSING];
-        // Open sessions by kind, and the closing ones split the same way
         return {
             [KIND_LOCAL]: groups[KIND_LOCAL].length,
             [KIND_REMOTE]: groups[KIND_REMOTE].length,
