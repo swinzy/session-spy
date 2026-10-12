@@ -14,12 +14,10 @@ import { gettext as _, ngettext } from "resource:///org/gnome/shell/extensions/e
 
 import { EndSessionDialog } from "./endSession.js";
 import { isCancelled } from "./async.js";
+import { SESSION_STATE_CLOSING } from "./sessionMonitor.js";
+import { ICON_NAMES, KIND_CLOSING, KIND_LOCAL, KIND_REMOTE } from "./sessionKinds.js";
 
-const ICON_NAMES = {
-    own: "avatar-default-symbolic",
-    local: "system-users-symbolic",
-    remote: "utilities-terminal-symbolic",
-};
+const ICON_NAME_OWN_SESSION = "avatar-default-symbolic";
 
 function remoteOrigin(session) {
     const user = session.RemoteUser ? `${session.RemoteUser}@` : "";
@@ -58,7 +56,7 @@ function detailLines(session) {
         lines.push(_("Type: %s").format(session.Type));
     if (session.Timestamp)
         lines.push(_("Started: %s").format(toDateTime(session.Timestamp).format("%Y-%m-%d %H:%M")));
-    if (session.State === "closing")
+    if (session.State === SESSION_STATE_CLOSING)
         lines.push(_("Disconnected, processes left running"));
     else if (session.IdleHint && session.IdleSinceHint)
         lines.push(_("Idle since %s").format(toDateTime(session.IdleSinceHint).format("%Y-%m-%d %H:%M")));
@@ -102,7 +100,7 @@ class SessionItem extends PopupMenu.PopupBaseMenuItem {
         const own = session.id === monitor.ownSessionId;
 
         const icon = new St.Icon({
-            icon_name: ICON_NAMES[own ? "own" : session.Remote ? "remote" : "local"],
+            icon_name: own ? ICON_NAME_OWN_SESSION : ICON_NAMES[session.Remote ? KIND_REMOTE : KIND_LOCAL],
             style_class: "popup-menu-icon session-spy-icon",
             y_align: Clutter.ActorAlign.START,
         });
@@ -193,7 +191,8 @@ export function fillSessionList(menu, monitor, order, closeMenu) {
 
     const isOwn = session => session.id === monitor.ownSessionId;
     const ordered = order.flatMap(key => groups[key].map(session => ({ session, key })));
+    // This session first; the sort is stable, so the rest keep their order
     ordered.sort((x, y) => isOwn(y.session) - isOwn(x.session));
     for (const { session, key } of ordered)
-        menu.addMenuItem(new SessionItem(session, key === "closing", monitor, closeMenu));
+        menu.addMenuItem(new SessionItem(session, key === KIND_CLOSING, monitor, closeMenu));
 }

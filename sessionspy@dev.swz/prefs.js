@@ -9,9 +9,17 @@ import Gtk from "gi://Gtk?version=4.0";
 
 import { ExtensionPreferences, gettext as _ } from "resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js";
 
+import {
+    LOCATION_SYSTEM_MENU,
+    LOCATION_TOP_BAR,
+    SETTINGS_KEY_DISPLAY_LOCATION,
+    SETTINGS_KEY_SHOW_COUNTS,
+    SETTINGS_KEY_SHOW_SESSION_LIST,
+} from "./settings.js";
+
 const LOCATIONS = [
-    ["top-bar", () => _("Top Bar Pills")],
-    ["system-menu", () => _("System Menu Icons")],
+    [LOCATION_TOP_BAR, () => _("Top Bar Pills")],
+    [LOCATION_SYSTEM_MENU, () => _("System Menu Icons")],
 ];
 
 export default class SessionSpyPreferences extends ExtensionPreferences {
@@ -21,7 +29,7 @@ export default class SessionSpyPreferences extends ExtensionPreferences {
             const group = new Adw.ToggleGroup({ valign: Gtk.Align.CENTER });
             for (const [name, label] of LOCATIONS)
                 group.add(new Adw.Toggle({ name, label: label() }));
-            settings.bind("display-location", group, "active-name", Gio.SettingsBindFlags.DEFAULT);
+            settings.bind(SETTINGS_KEY_DISPLAY_LOCATION, group, "active-name", Gio.SettingsBindFlags.DEFAULT);
             return group;
         }
 
@@ -33,15 +41,15 @@ export default class SessionSpyPreferences extends ExtensionPreferences {
                 button.set_group(buttons.values().next().value);
             button.connect("toggled", () => {
                 if (button.active)
-                    settings.set_string("display-location", name);
+                    settings.set_string(SETTINGS_KEY_DISPLAY_LOCATION, name);
             });
             buttons.set(name, button);
             box.append(button);
         }
         const sync = () => {
-            buttons.get(settings.get_string("display-location")).active = true;
+            buttons.get(settings.get_string(SETTINGS_KEY_DISPLAY_LOCATION)).active = true;
         };
-        settings.connect("changed::display-location", sync);
+        settings.connect(`changed::${SETTINGS_KEY_DISPLAY_LOCATION}`, sync);
         sync();
         return box;
     }
@@ -85,25 +93,25 @@ export default class SessionSpyPreferences extends ExtensionPreferences {
 
         linkBox.append(new Gtk.LinkButton({
             label: "GitHub",
-            uri: "https://github.com/swinzy/session-spy",
+            uri: this.metadata.url,
         }));
         linkBox.append(new Gtk.LinkButton({
             label: _("Report an Issue"),
-            uri: "https://github.com/swinzy/session-spy/issues",
+            uri: `${this.metadata.url}/issues`,
         }));
 
         window._settings = this.getSettings();
         locationRow.add_suffix(this._makeLocationChooser(window._settings));
-        window._settings.bind("show-counts", showCountsRow,
+        window._settings.bind(SETTINGS_KEY_SHOW_COUNTS, showCountsRow,
             "active", Gio.SettingsBindFlags.DEFAULT);
-        window._settings.bind("show-session-list", showSessionListRow,
+        window._settings.bind(SETTINGS_KEY_SHOW_SESSION_LIST, showSessionListRow,
             "active", Gio.SettingsBindFlags.DEFAULT);
         const syncRows = () => {
-            const topBar = window._settings.get_string("display-location") === "top-bar";
+            const topBar = window._settings.get_string(SETTINGS_KEY_DISPLAY_LOCATION) === LOCATION_TOP_BAR;
             showCountsRow.visible = !topBar;
             showSessionListRow.visible = topBar;
         };
-        window._settings.connect("changed::display-location", syncRows);
+        window._settings.connect(`changed::${SETTINGS_KEY_DISPLAY_LOCATION}`, syncRows);
         syncRows();
     }
 }

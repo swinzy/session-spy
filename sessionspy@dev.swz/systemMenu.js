@@ -14,8 +14,8 @@ import { gettext as _, ngettext } from "resource:///org/gnome/shell/extensions/e
 
 import { fillSessionList } from "./sessionList.js";
 import { indicatorState } from "./sessionMonitor.js";
-
-const ICON_NAMES = { local: "system-users-symbolic", remote: "utilities-terminal-symbolic" };
+import { ICON_NAMES, KIND_CLOSING, KIND_LOCAL, KIND_REMOTE, listOrder } from "./sessionKinds.js";
+import { SETTINGS_KEY_SHOW_COUNTS } from "./settings.js";
 
 const SessionsToggle = GObject.registerClass(
 class SessionsToggle extends QuickToggle {
@@ -51,18 +51,18 @@ class SessionsToggle extends QuickToggle {
     sync() {
         const { counts, groups, error } = this._monitor;
         this._worthShowing = counts
-            ? indicatorState(counts, "local").visible || indicatorState(counts, "remote").visible
+            ? indicatorState(counts, KIND_LOCAL).visible || indicatorState(counts, KIND_REMOTE).visible
             : Boolean(error);
         this._syncVisible();
         this.title = counts ? this._titleFor(counts, groups) : _("Login Sessions");
-        fillSessionList(this._listSection, this._monitor, ["remote", "local", "closing"],
+        fillSessionList(this._listSection, this._monitor, listOrder(KIND_REMOTE),
             () => Main.panel.statusArea.quickSettings.menu.close());
     }
 
     _titleFor(counts, groups) {
-        const open = counts.local + counts.remote;
+        const open = counts[KIND_LOCAL] + counts[KIND_REMOTE];
         const parts = [ngettext("%d Login Session", "%d Login Sessions", open).format(open)];
-        const closing = groups.closing.length;
+        const closing = groups[KIND_CLOSING].length;
         if (closing)
             parts.push(ngettext("%d Disconnected", "%d Disconnected", closing).format(closing));
         return parts.join(" · ");
@@ -77,12 +77,12 @@ class SessionSystemIndicator extends SystemIndicator {
         this._settings = settings;
 
         this._parts = {};
-        for (const kind of showIcons ? ["remote", "local"] : []) {
+        for (const kind of showIcons ? [KIND_REMOTE, KIND_LOCAL] : []) {
             const icon = this._addIndicator();
             icon.icon_name = ICON_NAMES[kind];
             const label = new St.Label({ y_expand: true, y_align: Clutter.ActorAlign.CENTER });
             label.add_style_class_name("session-spy-count");
-            if (kind === "remote") {
+            if (kind === KIND_REMOTE) {
                 icon.add_style_class_name("privacy-indicator");
                 label.add_style_class_name("privacy-indicator");
             }
@@ -93,7 +93,7 @@ class SessionSystemIndicator extends SystemIndicator {
 
         this._toggle = new SessionsToggle(monitor);
         this.quickSettingsItems.push(this._toggle);
-        this._settings.connectObject("changed::show-counts", () => this.sync(), this);
+        this._settings.connectObject(`changed::${SETTINGS_KEY_SHOW_COUNTS}`, () => this.sync(), this);
     }
 
     destroy() {
@@ -106,7 +106,7 @@ class SessionSystemIndicator extends SystemIndicator {
 
     sync() {
         const { counts } = this._monitor;
-        const showCounts = this._settings.get_boolean("show-counts");
+        const showCounts = this._settings.get_boolean(SETTINGS_KEY_SHOW_COUNTS);
         for (const [kind, { icon, label }] of Object.entries(this._parts)) {
             const state = counts ? indicatorState(counts, kind) : { visible: false, count: 0, countWorthShowing: false };
             icon.visible = state.visible;

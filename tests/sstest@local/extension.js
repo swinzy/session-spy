@@ -321,7 +321,7 @@ async function run() {
     let counts = await waitFor("counts", () => monitor()?.counts).catch(e => {
         throw new Error(`${e.message}; monitor error: ${monitor()?.error}\n${monitor()?.error?.stack}`);
     });
-    const actual = [counts.local, counts.remote, counts.localClosing, counts.remoteClosing];
+    const actual = [counts.local, counts.remote, counts.closing.local, counts.closing.remote];
     log(`counts ${actual.join(" ")}, expected ${expected.join(" ")}, own session ${monitor().ownSessionId}`);
     if (actual.join(" ") !== expected.join(" "))
         throw new Error("counts differ from loginctl");

@@ -13,8 +13,7 @@ import { gettext as _ } from "resource:///org/gnome/shell/extensions/extension.j
 
 import { fillSessionList } from "./sessionList.js";
 import { indicatorState } from "./sessionMonitor.js";
-
-const ICON_NAMES = { local: "system-users-symbolic", remote: "utilities-terminal-symbolic" };
+import { ICON_NAMES, KIND_LOCAL, KIND_REMOTE, listOrder } from "./sessionKinds.js";
 
 const SessionIndicator = GObject.registerClass(
 class SessionIndicator extends PanelMenu.Button {
@@ -41,7 +40,8 @@ class SessionIndicator extends PanelMenu.Button {
     sync() {
         const { counts, error } = this._monitor;
         if (!counts) {
-            this.visible = this._kind === "local" && Boolean(error);
+            // One pill is enough to show the error
+            this.visible = this._kind === KIND_LOCAL && Boolean(error);
             this._label.text = "?";
             fillSessionList(this.menu, this._monitor, [], () => this.menu.close());
             return;
@@ -54,14 +54,13 @@ class SessionIndicator extends PanelMenu.Button {
             this.menu.close();
             return;
         }
-        const order = this._kind === "remote" ? ["remote", "local", "closing"] : ["local", "remote", "closing"];
-        fillSessionList(this.menu, this._monitor, order, () => this.menu.close());
+        fillSessionList(this.menu, this._monitor, listOrder(this._kind), () => this.menu.close());
     }
 });
 
 export class TopBarView {
     constructor(uuid, monitor) {
-        this._indicators = ["local", "remote"].map(kind => {
+        this._indicators = [KIND_LOCAL, KIND_REMOTE].map(kind => {
             const indicator = new SessionIndicator(kind, monitor);
             Main.panel.addToStatusArea(`${uuid}-${kind}`, indicator, 0, "right");
             return indicator;

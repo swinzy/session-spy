@@ -6,19 +6,24 @@
 import Gio from "gi://Gio";
 import GLib from "gi://GLib";
 
-import { callSystemBus, isCancelled } from "./async.js";
+import { DBUS_PROPERTIES_IFACE, callSystemBus, isCancelled } from "./async.js";
 import { listSessionProcesses } from "./endSession.js";
+import { KIND_CLOSING, KIND_LOCAL, KIND_REMOTE } from "./sessionKinds.js";
 
 const LOGIND_BUS_NAME = "org.freedesktop.login1";
 const LOGIND_PATH = "/org/freedesktop/login1";
 const LOGIND_MANAGER_IFACE = "org.freedesktop.login1.Manager";
 const LOGIND_SESSION_IFACE = "org.freedesktop.login1.Session";
 
+// Also matches its variants "user-early" and "user-incomplete"
+const SESSION_CLASS_USER = "user";
+export const SESSION_STATE_CLOSING = "closing";
+
 // logind does not signal a session turning "closing", so poll as well
 const POLL_INTERVAL_SECONDS = 10;
 const REFRESH_DELAY_MS = 300;
 
-const NORMAL_COUNTS = { local: 1, remote: 0 };
+const NORMAL_COUNTS = { [KIND_LOCAL]: 1, [KIND_REMOTE]: 0 };
 
 function callLogind(path, iface, method, params, cancellable, flags) {
     return callSystemBus(LOGIND_BUS_NAME, path, iface, method, params, cancellable, flags);
@@ -26,7 +31,7 @@ function callLogind(path, iface, method, params, cancellable, flags) {
 
 async function readSession(id, path, cancellable) {
     try {
-        const [props] = await callLogind(path, "org.freedesktop.DBus.Properties",
+        const [props] = await callLogind(path, DBUS_PROPERTIES_IFACE,
             "GetAll", new GLib.Variant("(s)", [LOGIND_SESSION_IFACE]), cancellable);
         return { id, ...props };
     } catch (e) {
@@ -38,9 +43,10 @@ async function readSession(id, path, cancellable) {
 
 async function listUserSessions(cancellable) {
     const [entries] = await callLogind(LOGIND_PATH, LOGIND_MANAGER_IFACE, "ListSessions", null, cancellable);
+    // Each entry is (id, uid, user name, seat, object path)
     const sessions = await Promise.all(entries.map(([id, , , , path]) => readSession(id, path, cancellable)));
     return sessions
-        .filter(s => s && (s.Class === "user" || s.Class.startsWith("user-")))
+        .filter(s => s && (s.Class === SESSION_CLASS_USER || s.Class.startsWith(`${SESSION_CLASS_USER}-`)))
         .sort((a, b) => a.Timestamp - b.Timestamp);
 }
 
@@ -50,7 +56,7 @@ async function findOwnSessionId(cancellable) {
         return id;
     // "auto" falls back to the user's graphical session, as in GNOME Shell's login manager
     try {
-        const [ownId] = await callLogind(`${LOGIND_PATH}/session/auto`, "org.freedesktop.DBus.Properties",
+        const [ownId] = await callLogind(`${LOGIND_PATH}/session/auto`, DBUS_PROPERTIES_IFACE,
             "Get", new GLib.Variant("(ss)", [LOGIND_SESSION_IFACE, "Id"]), cancellable);
         return ownId;
     } catch (e) {
@@ -63,7 +69,7 @@ async function findOwnSessionId(cancellable) {
 export function indicatorState(counts, kind) {
     const count = counts[kind];
     return {
-        visible: count > NORMAL_COUNTS[kind] || counts[`${kind}Closing`] > 0,
+        visible: count > NORMAL_COUNTS[kind] || counts.closing[kind] > 0,
         count,
         countWorthShowing: count > NORMAL_COUNTS[kind] + 1,
     };
@@ -79,6 +85,7 @@ export class SessionMonitor {
         this.groups = null;
         this.error = null;
         this.expandedSessionId = null;
+        // undefined: not looked up yet; null: looked up, but there is none
         this.ownSessionId = undefined;
 
         this._signalIds = ["SessionNew", "SessionRemoved"].map(member =>
@@ -133,11 +140,11 @@ export class SessionMonitor {
         this.error = error;
         this.groups = null;
         if (sessions) {
-            const open = sessions.filter(s => s.State !== "closing");
+            const open = sessions.filter(s => s.State !== SESSION_STATE_CLOSING);
             this.groups = {
-                local: open.filter(s => !s.Remote),
-                remote: open.filter(s => s.Remote),
-                closing: sessions.filter(s => s.State === "closing"),
+                [KIND_LOCAL]: open.filter(s => !s.Remote),
+                [KIND_REMOTE]: open.filter(s => s.Remote),
+                [KIND_CLOSING]: sessions.filter(s => s.State === SESSION_STATE_CLOSING),
             };
         }
         this._onChanged();
@@ -145,11 +152,17 @@ export class SessionMonitor {
 
     get counts() {
         const { groups } = this;
-        return groups && {
-            local: groups.local.length,
-            remote: groups.remote.length,
-            localClosing: groups.closing.filter(s => !s.Remote).length,
-            remoteClosing: groups.closing.filter(s => s.Remote).length,
+        if (!groups)
+            return null;
+        const closing = groups[KIND_CLOSING];
+        // Open sessions by kind, and the closing ones split the same way
+        return {
+            [KIND_LOCAL]: groups[KIND_LOCAL].length,
+            [KIND_REMOTE]: groups[KIND_REMOTE].length,
+            closing: {
+                [KIND_LOCAL]: closing.filter(s => !s.Remote).length,
+                [KIND_REMOTE]: closing.filter(s => s.Remote).length,
+            },
         };
     }
 

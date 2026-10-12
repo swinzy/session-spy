@@ -6,6 +6,8 @@
 import Gio from "gi://Gio";
 import GLib from "gi://GLib";
 
+export const DBUS_PROPERTIES_IFACE = "org.freedesktop.DBus.Properties";
+
 export function isCancelled(error) {
     return error instanceof GLib.Error && error.matches(Gio.IOErrorEnum, Gio.IOErrorEnum.CANCELLED);
 }

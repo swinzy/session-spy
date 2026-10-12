@@ -12,13 +12,20 @@ import * as Dialog from "resource:///org/gnome/shell/ui/dialog.js";
 import * as ModalDialog from "resource:///org/gnome/shell/ui/modalDialog.js";
 import { gettext as _, ngettext } from "resource:///org/gnome/shell/extensions/extension.js";
 
-import { callAsync, callSystemBus } from "./async.js";
+import { DBUS_PROPERTIES_IFACE, callAsync, callSystemBus } from "./async.js";
+
+const SYSTEMD_BUS_NAME = "org.freedesktop.systemd1";
+const SYSTEMD_PATH = "/org/freedesktop/systemd1";
+const SYSTEMD_MANAGER_IFACE = "org.freedesktop.systemd1.Manager";
+const SYSTEMD_SCOPE_IFACE = "org.freedesktop.systemd1.Scope";
 
 // More would only slow the dialog down; its list scrolls anyway
 const MAX_LISTED_PROCESSES = 100;
+// Directory entries read per call while walking the cgroup tree
+const ENUMERATE_BATCH_SIZE = 50;
 
 function callSystemd(path, iface, method, params, cancellable) {
-    return callSystemBus("org.freedesktop.systemd1", path, iface, method, params, cancellable);
+    return callSystemBus(SYSTEMD_BUS_NAME, path, iface, method, params, cancellable);
 }
 
 async function readText(path, cancellable) {
@@ -36,7 +43,7 @@ async function readCgroupPids(dir, cancellable) {
         "standard::name,standard::type", Gio.FileQueryInfoFlags.NONE, GLib.PRIORITY_DEFAULT, cancellable);
     for (;;) {
         const infos = await callAsync(enumerator, "next_files_async", "next_files_finish",
-            50, GLib.PRIORITY_DEFAULT, cancellable);
+            ENUMERATE_BATCH_SIZE, GLib.PRIORITY_DEFAULT, cancellable);
         if (!infos.length)
             break;
         for (const info of infos) {
@@ -61,10 +68,10 @@ async function describeProcess(pid, cancellable) {
 }
 
 export async function listSessionProcesses(scope, cancellable = null) {
-    const [unitPath] = await callSystemd("/org/freedesktop/systemd1", "org.freedesktop.systemd1.Manager",
+    const [unitPath] = await callSystemd(SYSTEMD_PATH, SYSTEMD_MANAGER_IFACE,
         "GetUnit", new GLib.Variant("(s)", [scope]), cancellable);
-    const [controlGroup] = await callSystemd(unitPath, "org.freedesktop.DBus.Properties",
-        "Get", new GLib.Variant("(ss)", ["org.freedesktop.systemd1.Scope", "ControlGroup"]), cancellable);
+    const [controlGroup] = await callSystemd(unitPath, DBUS_PROPERTIES_IFACE,
+        "Get", new GLib.Variant("(ss)", [SYSTEMD_SCOPE_IFACE, "ControlGroup"]), cancellable);
     const pids = (await readCgroupPids(`/sys/fs/cgroup${controlGroup}`, cancellable)).sort((a, b) => a - b);
     const processes = (await Promise.all(pids.slice(0, MAX_LISTED_PROCESSES)
         .map(pid => describeProcess(pid, cancellable)))).filter(Boolean);
@@ -107,6 +114,7 @@ class EndSessionDialog extends ModalDialog.ModalDialog {
         });
         this.addButton({
             action: () => {
+                // As in GNOME's log out dialog: act once the fade-out is done, so polkit's dialog does not open over it
                 this.connect("closed", () => onConfirm());
                 this.close();
             },

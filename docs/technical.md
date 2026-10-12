@@ -13,6 +13,8 @@ How Session Spy works, what it relies on in GNOME Shell and systemd, and how it 
 | `systemMenu.js` | GNOME Shell | "System Menu Icons": status icons and the Login Sessions row in quick settings |
 | `endSession.js` | GNOME Shell | Lists a session's processes and the confirmation dialog |
 | `async.js` | GNOME Shell | Promise wrappers for D-Bus and GIO calls, cancellation check |
+| `sessionKinds.js` | GNOME Shell | Session kinds (local, remote, closing), their icons and list order |
+| `settings.js` | Both | GSettings key names and display location values |
 | `prefs.js` | Preferences | The preferences window |
 
 `sessionMonitor.js` and `async.js` use only GLib/Gio; everything that builds UI uses St and the shell's own widgets.
